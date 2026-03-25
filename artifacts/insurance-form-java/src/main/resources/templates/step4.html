@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Contact Information — Commercial Insurance</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<div class="form-wrapper">
+
+  <div class="step-indicator">
+    <div class="step-item">
+      <div class="step-circle completed">✓</div>
+      <span class="step-label">Business</span>
+    </div>
+    <div class="step-connector completed"></div>
+    <div class="step-item">
+      <div class="step-circle completed">✓</div>
+      <span class="step-label">Coverage</span>
+    </div>
+    <div class="step-connector completed"></div>
+    <div class="step-item">
+      <div class="step-circle completed">✓</div>
+      <span class="step-label">Risk</span>
+    </div>
+    <div class="step-connector completed"></div>
+    <div class="step-item">
+      <div class="step-circle active">4</div>
+      <span class="step-label active">Contact</span>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <h2>Contact Information</h2>
+    <p class="subtitle">We're almost done. Who should we reach out to about this application?</p>
+
+    <form th:action="@{/step4}" th:object="${step4}" method="post" novalidate>
+
+      <div class="row g-3 mb-3">
+        <div class="col-6">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-control" th:field="*{contactName}"
+                 th:classappend="${#fields.hasErrors('contactName')} ? 'is-invalid'"
+                 placeholder="Jane Smith"/>
+          <div class="invalid-feedback" th:errors="*{contactName}"></div>
+        </div>
+        <div class="col-6">
+          <label class="form-label">Job Title *</label>
+          <input type="text" class="form-control" th:field="*{contactTitle}"
+                 th:classappend="${#fields.hasErrors('contactTitle')} ? 'is-invalid'"
+                 placeholder="CEO / Owner"/>
+          <div class="invalid-feedback" th:errors="*{contactTitle}"></div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email Address *</label>
+        <input type="email" class="form-control" th:field="*{contactEmail}"
+               th:classappend="${#fields.hasErrors('contactEmail')} ? 'is-invalid'"
+               placeholder="jane@company.com"/>
+        <div class="invalid-feedback" th:errors="*{contactEmail}"></div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Phone Number *</label>
+        <input type="tel" class="form-control" th:field="*{contactPhone}"
+               th:classappend="${#fields.hasErrors('contactPhone')} ? 'is-invalid'"
+               placeholder="(555) 123-4567"/>
+        <div class="invalid-feedback" th:errors="*{contactPhone}"></div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Additional Notes <span class="text-muted fw-normal">(optional)</span></label>
+        <textarea class="form-control" th:field="*{additionalNotes}" rows="3"
+                  placeholder="Any other information that might be helpful for your quote..."></textarea>
+      </div>
+
+      <div class="btn-row">
+        <a href="/back/step4" class="btn-back">← Back</a>
+        <button type="submit" class="btn-primary-custom">Submit Application →</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>
