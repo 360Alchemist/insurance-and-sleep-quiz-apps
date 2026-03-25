@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Business Information — Commercial Insurance</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<div class="form-wrapper">
+
+  <!-- Step Indicator -->
+  <div class="step-indicator">
+    <div class="step-item">
+      <div class="step-circle active">1</div>
+      <span class="step-label active">Business</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-item">
+      <div class="step-circle">2</div>
+      <span class="step-label">Coverage</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-item">
+      <div class="step-circle">3</div>
+      <span class="step-label">Risk</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-item">
+      <div class="step-circle">4</div>
+      <span class="step-label">Contact</span>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <h2>Business Information</h2>
+    <p class="subtitle">Tell us about your business so we can find the right coverage for you.</p>
+
+    <form th:action="@{/step1}" th:object="${step1}" method="post" novalidate>
+
+      <div class="mb-3">
+        <label class="form-label">Business Name *</label>
+        <input type="text" class="form-control" th:field="*{businessName}"
+               th:classappend="${#fields.hasErrors('businessName')} ? 'is-invalid'" placeholder="Acme Corp"/>
+        <div class="invalid-feedback" th:errors="*{businessName}"></div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Business Type *</label>
+        <select class="form-select" th:field="*{businessType}"
+                th:classappend="${#fields.hasErrors('businessType')} ? 'is-invalid'">
+          <option value="">Select type...</option>
+          <option value="sole_proprietorship">Sole Proprietorship</option>
+          <option value="partnership">Partnership</option>
+          <option value="llc">LLC</option>
+          <option value="s_corp">S Corporation</option>
+          <option value="c_corp">C Corporation</option>
+          <option value="nonprofit">Non-profit</option>
+        </select>
+        <div class="invalid-feedback" th:errors="*{businessType}"></div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Industry *</label>
+        <select class="form-select" th:field="*{industry}" id="industrySelect"
+                th:classappend="${#fields.hasErrors('industry')} ? 'is-invalid'"
+                onchange="toggleOther(this.value)">
+          <option value="">Select industry...</option>
+          <option value="retail">Retail</option>
+          <option value="restaurant">Restaurant / Food Service</option>
+          <option value="construction">Construction</option>
+          <option value="healthcare">Healthcare</option>
+          <option value="technology">Technology</option>
+          <option value="manufacturing">Manufacturing</option>
+          <option value="professional_services">Professional Services</option>
+          <option value="real_estate">Real Estate</option>
+          <option value="transportation">Transportation</option>
+          <option value="education">Education</option>
+          <option value="Other">Other</option>
+        </select>
+        <div class="invalid-feedback" th:errors="*{industry}"></div>
+      </div>
+
+      <div class="mb-3" id="industryOtherDiv"
+           th:style="${step1.industry == 'Other'} ? '' : 'display:none'">
+        <label class="form-label">Please describe your industry *</label>
+        <input type="text" class="form-control" th:field="*{industryOther}"
+               th:classappend="${#fields.hasErrors('industryOther')} ? 'is-invalid'"
+               placeholder="e.g. Wedding photography"/>
+        <div class="invalid-feedback" th:errors="*{industryOther}"></div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-6">
+          <label class="form-label">Annual Revenue *</label>
+          <select class="form-select" th:field="*{annualRevenue}"
+                  th:classappend="${#fields.hasErrors('annualRevenue')} ? 'is-invalid'">
+            <option value="">Select range...</option>
+            <option value="under_100k">Under $100,000</option>
+            <option value="100k_500k">$100K – $500K</option>
+            <option value="500k_1m">$500K – $1M</option>
+            <option value="1m_5m">$1M – $5M</option>
+            <option value="over_5m">Over $5M</option>
+          </select>
+          <div class="invalid-feedback" th:errors="*{annualRevenue}"></div>
+        </div>
+        <div class="col-6">
+          <label class="form-label">No. of Employees *</label>
+          <input type="number" class="form-control" th:field="*{numberOfEmployees}"
+                 th:classappend="${#fields.hasErrors('numberOfEmployees')} ? 'is-invalid'"
+                 placeholder="e.g. 25" min="1"/>
+          <div class="invalid-feedback" th:errors="*{numberOfEmployees}"></div>
+        </div>
+      </div>
+
+      <hr class="my-3"/>
+
+      <div class="mb-3">
+        <label class="form-label">Street Address *</label>
+        <input type="text" class="form-control" th:field="*{streetAddress}"
+               th:classappend="${#fields.hasErrors('streetAddress')} ? 'is-invalid'"
+               placeholder="123 Main St"/>
+        <div class="invalid-feedback" th:errors="*{streetAddress}"></div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-5">
+          <label class="form-label">City *</label>
+          <input type="text" class="form-control" th:field="*{city}"
+                 th:classappend="${#fields.hasErrors('city')} ? 'is-invalid'" placeholder="New York"/>
+          <div class="invalid-feedback" th:errors="*{city}"></div>
+        </div>
+        <div class="col-4">
+          <label class="form-label">State *</label>
+          <select class="form-select" th:field="*{state}"
+                  th:classappend="${#fields.hasErrors('state')} ? 'is-invalid'">
+            <option value="">State</option>
+            <option value="AL">AL</option><option value="AK">AK</option><option value="AZ">AZ</option>
+            <option value="AR">AR</option><option value="CA">CA</option><option value="CO">CO</option>
+            <option value="CT">CT</option><option value="DE">DE</option><option value="FL">FL</option>
+            <option value="GA">GA</option><option value="HI">HI</option><option value="ID">ID</option>
+            <option value="IL">IL</option><option value="IN">IN</option><option value="IA">IA</option>
+            <option value="KS">KS</option><option value="KY">KY</option><option value="LA">LA</option>
+            <option value="ME">ME</option><option value="MD">MD</option><option value="MA">MA</option>
+            <option value="MI">MI</option><option value="MN">MN</option><option value="MS">MS</option>
+            <option value="MO">MO</option><option value="MT">MT</option><option value="NE">NE</option>
+            <option value="NV">NV</option><option value="NH">NH</option><option value="NJ">NJ</option>
+            <option value="NM">NM</option><option value="NY">NY</option><option value="NC">NC</option>
+            <option value="ND">ND</option><option value="OH">OH</option><option value="OK">OK</option>
+            <option value="OR">OR</option><option value="PA">PA</option><option value="RI">RI</option>
+            <option value="SC">SC</option><option value="SD">SD</option><option value="TN">TN</option>
+            <option value="TX">TX</option><option value="UT">UT</option><option value="VT">VT</option>
+            <option value="VA">VA</option><option value="WA">WA</option><option value="WV">WV</option>
+            <option value="WI">WI</option><option value="WY">WY</option>
+          </select>
+          <div class="invalid-feedback" th:errors="*{state}"></div>
+        </div>
+        <div class="col-3">
+          <label class="form-label">ZIP *</label>
+          <input type="text" class="form-control" th:field="*{zipCode}"
+                 th:classappend="${#fields.hasErrors('zipCode')} ? 'is-invalid'" placeholder="10001"/>
+          <div class="invalid-feedback" th:errors="*{zipCode}"></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn-primary-custom">Continue →</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+  function toggleOther(val) {
+    document.getElementById('industryOtherDiv').style.display = val === 'Other' ? '' : 'none';
+  }
+</script>
+</body>
+</html>
