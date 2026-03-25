@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Risk Assessment — Commercial Insurance</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<div class="form-wrapper">
+
+  <div class="step-indicator">
+    <div class="step-item">
+      <div class="step-circle completed">✓</div>
+      <span class="step-label">Business</span>
+    </div>
+    <div class="step-connector completed"></div>
+    <div class="step-item">
+      <div class="step-circle completed">✓</div>
+      <span class="step-label">Coverage</span>
+    </div>
+    <div class="step-connector completed"></div>
+    <div class="step-item">
+      <div class="step-circle active">3</div>
+      <span class="step-label active">Risk</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-item">
+      <div class="step-circle">4</div>
+      <span class="step-label">Contact</span>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <h2>Risk Assessment</h2>
+    <p class="subtitle">Help us understand your business's risk profile.</p>
+
+    <form th:action="@{/step3}" th:object="${step3}" method="post" novalidate>
+
+      <!-- Prior Claims -->
+      <div class="mb-4">
+        <label class="form-label">Has your business had any insurance claims in the past 5 years? *</label>
+        <div th:if="${#fields.hasErrors('hasPriorClaims')}" class="text-danger small mb-1" th:errors="*{hasPriorClaims}"></div>
+        <div class="radio-group">
+          <label class="radio-option" th:classappend="${step3.hasPriorClaims != null and step3.hasPriorClaims} ? 'selected'">
+            <input type="radio" name="hasPriorClaims" value="true"
+                   th:checked="${step3.hasPriorClaims != null and step3.hasPriorClaims}"
+                   onchange="toggleClaims(true)"/> Yes
+          </label>
+          <label class="radio-option" th:classappend="${step3.hasPriorClaims != null and !step3.hasPriorClaims} ? 'selected'">
+            <input type="radio" name="hasPriorClaims" value="false"
+                   th:checked="${step3.hasPriorClaims != null and !step3.hasPriorClaims}"
+                   onchange="toggleClaims(false)"/> No
+          </label>
+        </div>
+        <div id="claimsDesc" class="mt-2"
+             th:style="${step3.hasPriorClaims != null and step3.hasPriorClaims} ? '' : 'display:none'">
+          <label class="form-label">Please describe the claims *</label>
+          <textarea class="form-control" th:field="*{priorClaimsDescription}" rows="3"
+                    placeholder="Briefly describe each claim..."></textarea>
+        </div>
+      </div>
+
+      <!-- Hazardous Materials -->
+      <div class="mb-4">
+        <label class="form-label">Does your business handle hazardous materials or chemicals? *</label>
+        <div th:if="${#fields.hasErrors('hasHazardousMaterials')}" class="text-danger small mb-1" th:errors="*{hasHazardousMaterials}"></div>
+        <div class="radio-group">
+          <label class="radio-option" th:classappend="${step3.hasHazardousMaterials != null and step3.hasHazardousMaterials} ? 'selected'">
+            <input type="radio" name="hasHazardousMaterials" value="true"
+                   th:checked="${step3.hasHazardousMaterials != null and step3.hasHazardousMaterials}"
+                   onchange="selectRadio(this)"/> Yes
+          </label>
+          <label class="radio-option" th:classappend="${step3.hasHazardousMaterials != null and !step3.hasHazardousMaterials} ? 'selected'">
+            <input type="radio" name="hasHazardousMaterials" value="false"
+                   th:checked="${step3.hasHazardousMaterials != null and !step3.hasHazardousMaterials}"
+                   onchange="selectRadio(this)"/> No
+          </label>
+        </div>
+      </div>
+
+      <!-- Home Based -->
+      <div class="mb-4">
+        <label class="form-label">Is this a home-based business? *</label>
+        <div th:if="${#fields.hasErrors('isHomeBasedBusiness')}" class="text-danger small mb-1" th:errors="*{isHomeBasedBusiness}"></div>
+        <div class="radio-group">
+          <label class="radio-option" th:classappend="${step3.isHomeBasedBusiness != null and step3.isHomeBasedBusiness} ? 'selected'">
+            <input type="radio" name="isHomeBasedBusiness" value="true"
+                   th:checked="${step3.isHomeBasedBusiness != null and step3.isHomeBasedBusiness}"
+                   onchange="selectRadio(this)"/> Yes
+          </label>
+          <label class="radio-option" th:classappend="${step3.isHomeBasedBusiness != null and !step3.isHomeBasedBusiness} ? 'selected'">
+            <input type="radio" name="isHomeBasedBusiness" value="false"
+                   th:checked="${step3.isHomeBasedBusiness != null and !step3.isHomeBasedBusiness}"
+                   onchange="selectRadio(this)"/> No
+          </label>
+        </div>
+      </div>
+
+      <!-- Multiple Locations -->
+      <div class="mb-4">
+        <label class="form-label">Does your business operate from multiple locations? *</label>
+        <div th:if="${#fields.hasErrors('operatesMultipleLocations')}" class="text-danger small mb-1" th:errors="*{operatesMultipleLocations}"></div>
+        <div class="radio-group">
+          <label class="radio-option" th:classappend="${step3.operatesMultipleLocations != null and step3.operatesMultipleLocations} ? 'selected'">
+            <input type="radio" name="operatesMultipleLocations" value="true"
+                   th:checked="${step3.operatesMultipleLocations != null and step3.operatesMultipleLocations}"
+                   onchange="selectRadio(this)"/> Yes
+          </label>
+          <label class="radio-option" th:classappend="${step3.operatesMultipleLocations != null and !step3.operatesMultipleLocations} ? 'selected'">
+            <input type="radio" name="operatesMultipleLocations" value="false"
+                   th:checked="${step3.operatesMultipleLocations != null and !step3.operatesMultipleLocations}"
+                   onchange="selectRadio(this)"/> No
+          </label>
+        </div>
+      </div>
+
+      <!-- High Value Equipment -->
+      <div class="mb-4">
+        <label class="form-label">Does your business own high-value equipment or inventory (over $50,000)? *</label>
+        <div th:if="${#fields.hasErrors('hasHighValueEquipment')}" class="text-danger small mb-1" th:errors="*{hasHighValueEquipment}"></div>
+        <div class="radio-group">
+          <label class="radio-option" th:classappend="${step3.hasHighValueEquipment != null and step3.hasHighValueEquipment} ? 'selected'">
+            <input type="radio" name="hasHighValueEquipment" value="true"
+                   th:checked="${step3.hasHighValueEquipment != null and step3.hasHighValueEquipment}"
+                   onchange="selectRadio(this)"/> Yes
+          </label>
+          <label class="radio-option" th:classappend="${step3.hasHighValueEquipment != null and !step3.hasHighValueEquipment} ? 'selected'">
+            <input type="radio" name="hasHighValueEquipment" value="false"
+                   th:checked="${step3.hasHighValueEquipment != null and !step3.hasHighValueEquipment}"
+                   onchange="selectRadio(this)"/> No
+          </label>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <a href="/back/step3" class="btn-back">← Back</a>
+        <button type="submit" class="btn-primary-custom">Continue →</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  function toggleClaims(show) {
+    document.getElementById('claimsDesc').style.display = show ? '' : 'none';
+    selectRadio(event.target);
+  }
+  function selectRadio(el) {
+    if (!el) el = event.target;
+    const group = el.closest('.radio-group');
+    group.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+    el.closest('.radio-option').classList.add('selected');
+  }
+  document.querySelectorAll('.radio-option input:checked').forEach(r => {
+    r.closest('.radio-option').classList.add('selected');
+  });
+</script>
+</body>
+</html>
